@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Insights: Your Natal Chart Unveiled</title>
+    <meta name="description" content="Explore your personal astrology with our premium Natal Chart calculator. Discover the positions of the planets at your birth and unlock deep insights into your destiny.  Includes free and premium options.">
+    <meta name="keywords" content="astrology, natal chart, birth chart, planets, zodiac signs, horoscope, personal astrology, cosmic insights, premium natal chart, subscription astrology">
+    <link rel="canonical" href="https://www.example.com/natal-chart">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: url('{{ astro_bg_image_url }}');
+            background-size: cover;
+            background-position: top center;
+        }
+
+        header {
+            background: linear-gradient(to right, #6a11cb, #2575fc);
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        header h1 {
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+            font-weight: 600;
+            flex: 1 1 100%;
+        }
+
+        header p {
+            font-size: 1.1em;
+            font-weight: 400;
+            margin-bottom: 0;
+            flex: 1 1 100%;
+        }
+
+        header nav {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 0;
+            align-items: center;
+        }
+
+        header nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 1.1em;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        header nav a:hover {
+            color: #d1c4e9;
+        }
+
+        main {
+            flex: 1;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .section-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 40px;
+            z-index: 1;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 700px;
+            margin-bottom: 40px;
+        }
+
+        .container h2 {
+            color: #4a148c;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 2.2em;
+            font-weight: 600;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 500;
+            color: #555;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .form-group input[type="date"],
+        .form-group input[type="time"],
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"] {
+            width: calc(100% - 24px);
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+            background-color: #f8f8f8;
+        }
+
+        .form-group input[type="date"]:focus,
+        .form-group input[type="time"]:focus,
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group input[type="password"]:focus {
+            outline: none;
+            border-color: #7e57c2;
+            box-shadow: 0 0 5px rgba(126, 87, 194, 0.3);
+        }
+
+        button[type="submit"], .cta-button {
+            background: linear-gradient(to right, #7e57c2, #9c27b0);
+            color: white;
+            padding: 14px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1.2em;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-weight: 500;
+        }
+
+        button[type="submit"]:hover, .cta-button:hover {
+            background: linear-gradient(to right, #673ab7, #7b1fa2);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        button[type="submit"]:active, .cta-button:active {
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            transform: translateY(0);
+        }
+
+        .error-message {
+            color: #e57373;
+            margin-top: 15px;
+            font-size: 1.1em;
+            padding: 10px;
+            background-color: #ffe0e0;
+            border-radius: 6px;
+            border: 1px solid #ffb7b2;
+        }
+
+        .results-section {
+            margin-top: 40px;
+            padding: 30px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-section h3 {
+            color: #4a148c;
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 1.5em;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .results-section img {
+            max-width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .results-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .results-list li {
+            margin-bottom: 15px;
+            color: #666;
+            font-size: 1.1em;
+            line-height: 1.7;
+            border-bottom: 1px dashed #dcdcdc;
+            padding-bottom: 15px;
+        }
+
+        .results-list li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .results-list li strong {
+            font-weight: 600;
+            color: #333;
+        }
+
+        footer {
+            background-color: #311b92;
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            font-size: 0.9em;
+            margin-top: 40px;
+            z-index: 2;
+            position: relative;
+        }
+
+        footer p {
+            margin-bottom: 0;
+        }
+
+        .auth-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            box-sizing: border-box;
+            position: absolute;
+            top: 250px;
+            left: 30px;
+            border: 2px solid #4a148c;
+            z-index: 10;
+        }
+
+        .auth-section h2 {
+            font-size: 1.8em;
+            color: #4a148c;
+            margin-bottom: 20px;
+        }
+
+        .auth-section form {
+            width: 100%;
+        }
+
+        .subscription-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            border-radius: 12px;
+            background-color: rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            box-sizing: border-box;
+            position: absolute;
+            bottom: 50px;
+            right: 30px;
+            border: 2px solid #4a148c;
+            z-index: 10;
+        }
+
+        .subscription-section h2 {
+            font-size: 1.8em;
+            color: #4a148c;
+            margin-bottom: 20px;
+        }
+
+        .subscription-plans {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .subscription-plan {
+            background-color: #f8f8f8;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            width: 100%;
+            max-width: 300px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 1px solid #e0e0e0;
+            box-sizing: border-box;
+        }
+
+        .subscription-plan:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .subscription-plan h3 {
+            font-size: 1.2em;
+            color: #4a148c;
+            margin-bottom: 10px;
+        }
+
+        .subscription-plan p {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .subscription-plan button {
+            background: linear-gradient(to right, #7e57c2, #9c27b0);
+            color: white;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .subscription-plan button:hover {
+            background: linear-gradient(to right, #673ab7, #7b1fa2);
+            transform: translateY(-2px);
+        }
+
+        .discount {
+            color: #ff5722;
+            font-size: 0.9em;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+
+        #natal-chart {
+            margin-top: 250px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+            width: 60%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-section {
+            display: flex;
+            justify-content: center;
+            margin-top: 40px;
+            width: 100%;
+            max-width: 100%;
+            flex-wrap: wrap;
+            z-index: 1;
+        }
+
+        .feature-item {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .feature-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-item img {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 15px;
+        }
+
+        .feature-item h3 {
+            font-size: 1.2em;
+            color: #4a148c;
+            margin-bottom: 10px;
+        }
+
+        .feature-item p {
+            font-size: 1.1em;
+            color: #666;
+        }
+
+        #login{
+            transform: translateX(0);
+            top: 200px;
+            left: 30px;
+        }
+         #subscribe{
+            transform: translateX(0);
+            bottom: 100px;
+            right: 30px;
+        }
+        header nav {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        @media (max-width: 1200px){
+            header {
+                flex-direction: column;
+            }
+            header nav{
+                margin-top: 10px;
+                justify-content: center;
+            }
+            #login, #subscribe{
+                left: 50%;
+                transform: translateX(-50%);
+                right: 50%;
+            }
+            #natal-chart{
+                margin-top: 500px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+
+            .container h2 {
+                font-size: 1.8em;
+            }
+
+            .form-group input[type="date"],
+            .form-group input[type="time"],
+            .form-group input[type="text"],
+            .form-group input[type="email"],
+            .form-group input[type="password"]{
+                font-size: 1em;
+            }
+
+            button[type="submit"], .cta-button {
+                font-size: 1.1em;
+            }
+
+            .results-section {
+                padding: 20px;
+            }
+
+            .results-section h3 {
+                font-size: 1.3em;
+            }
+
+            .results-list li {
+                font-size: 1em;
+            }
+            header h1{
+                font-size: 2em;
+            }
+            header p{
+                font-size: 1em;
+            }
+            header nav a{
+                font-size: 1em;
+            }
+            .subscription-plans {
+                flex-direction: column;
+                align-items: center;
+            }
+            .auth-section{
+                max-width: 90%;
+                position: relative;
+                top: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            #natal-chart{
+                margin-top: 20px;
+            }
+            .subscription-section{
+                position: relative;
+                bottom: 20px;
+                right: 50%;
+                transform: translateX(50%);
+                max-width: 90%;
+            }
+             .feature-section {
+                flex-direction: column;
+                align-items: center;
+            }
+             #login {
+                top: 100px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            #subscribe{
+                bottom: 20px;
+                right: 50%;
+                transform: translateX(50%);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .container {
+                padding: 20px;
+            }
+
+            .form-group input[type="date"],
+            .form-group input[type="time"],
+            .form-group input[type="text"],
+            .form-group input[type="email"],
+            .form-group input[type="password"] {
+                width: 100%;
+            }
+            header h1{
+                font-size: 1.75em;
+            }
+             header p{
+                font-size: 0.9em;
+            }
+             header nav a{
+                font-size: 0.9em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Cosmic Insights</h1>
+        <nav>
+            <a href="#login">Login</a> | <a href="#subscribe">Subscribe</a>
+        </nav>
+    </header>
+
+    <main>
+        <section id="login" class="auth-section section-container">
+            <div class = "container">
+                <h2>Login</h2>
+                <form>
+                    <div class="form-group">
+                        <label for="email">Email <span style="color:#b71c1c;">*</span></label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password <span style="color:#b71c1c;">*</span></label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                    <button type="submit">Login</button>
+                </form>
+                <p style="margin-top: 15px; font-size: 0.9em; color: #555;">Don't have an account? <a href="#subscribe" style="color: #7e57c2;">Subscribe Now</a></p>
+            </div>
+        </section>
+
+        <section id="natal-chart" class = "section-container">
+            <div class="container">
+                <h2>Natal Chart Calculator</h2>
+                <p style="text-align: center; color: #777; margin-bottom: 30px;">
+                    Enter your birth details to calculate your natal chart and reveal the positions of the planets at the moment you were born.
+                </p>
+
+                <form method="POST">
+                    <div class="form-group">
+                        <label for="birth_date">Birth Date (YYYY-MM-DD) <span style="color:#b71c1c;">*</span></label>
+                        <input type="date" id="birth_date" name="birth_date" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="birth_time">Birth Time (24h HH:MM) <span style="color:#b71c1c;">*</span></label>
+                        <input type="time" id="birth_time" name="birth_time" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="birth_place">Birth Place (City, Country) <span style="color:#b71c1c;">*</span></label>
+                        <input type="text" id="birth_place" name="birth_place" placeholder="e.g., New York, USA" required>
+                    </div>
+
+                    <button type="submit">Calculate Your Natal Chart</button>
+                </form>
+
+                {% if error %}
+                    <p class="error-message">{{ error }}</p>
+                {% endif %}
+
+                {% if astrology %}
+                    <div class="results-section">
+                        <h3>Your Planetary Positions</h3>
+                        <p style="font-size: 1.1em; color: #555; margin-bottom: 20px;">
+                            Here are the positions of the planets in your birth chart.  These placements offer valuable insights into your personality, potential, and life path.
+                        </p>
+                        <img src="https://via.placeholder.com/400" alt="Natal Chart"  />
+                        <ul class="results-list">
+                            {% for planet, pos in astrology.items() %}
+                                <li>
+                                    <strong>{{ planet }}</strong>:
+                                    Right Ascension (RA) - <strong>{{ pos.ra }}</strong>,
+                                    Declination (Dec) - <strong>{{ pos.dec }}</strong>,
+                                    Constellation - <strong>{{ pos.constellation }}</strong>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <p style="font-size: 0.9em; color: #888; margin-top: 20px;">
+                            <strong>Note:</strong>  The Right Ascension and Declination values indicate the planet's position in the celestial sphere.  The constellation shows which star group the planet was located in at the time of your birth.
+                        </p>
+                        <a href="#subscribe" class="cta-button">Upgrade to Premium for in-depth analysis</a>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+
+        <section id="subscribe" class="subscription-section section-container">
+            <div class = "container">
+                <h2>Subscription Options</h2>
+                <p style="text-align: center; color: #777; margin-bottom: 30px;">
+                    Unlock premium features and personalized insights with our subscription plans.
+                </p>
+                <div class="subscription-plans">
+                    <div class="subscription-plan">
+                        <h3>Basic</h3>
+                        <p>$19/month</p>
+                        <p>&#10004;  Natal Chart Calculation</p>
+                        <p>&#10004;  Basic Planetary Positions</p>
+                        <p>&#10008;  In-depth Analysis</p>
+                        <p>&#10008;  Personalized Readings</p>
+                        <button>Subscribe</button>
+                    </div>
+                    <div class="subscription-plan">
+                        <h3>Premium</h3>
+                        <p>$49/month</p>
+                        <p>&#10004;  All Basic Features</p>
+                        <p>&#10004;  In-depth Analysis</p>
+                        <p>&#10004;  Personalized Readings</p>
+                        <p>&#10004;  Monthly гороскоп</p>
+                        <span class="discount">20% off annually</span>
+                        <button>Subscribe</button>
+                    </div>
+                    <div class="subscription-plan">
+                        <h3>Deluxe</h3>
+                        <p>$99/month</p>
+                        <p>&#10004;  All Premium Features</p>
+                        <p>&#10004;  1-on-1 Consultation</p>
+                        <p>&#10004;  Advanced Transit Analysis</p>
+                        <p>&#10004;  Relationship Compatibility Report</p>
+                        <button>Subscribe</button>
+                    </div>
+                </div>
+                <p style="margin-top: 15px; font-size: 0.9em; color: #555;">Already have an account? <a href="#login" style="color: #7e57c2;">Login</a></p>
+            </div>
+        </section>
+
+        <section class="feature-section section-container">
+            <div class="feature-item">
+                <img src="https://via.placeholder.com/100" alt="Feature 1">
+                <h3>Detailed Natal Chart</h3>
+                <p>Get a comprehensive analysis of your birth chart.</p>
+            </div>
+            <div class="feature-item">
+                 <img src="https://via.placeholder.com/100" alt="Feature 2">
+                <h3>Personalized Readings</h3>
+                <p>Receive tailored insights based on your unique chart.</p>
+            </div>
+            <div class="feature-item">
+                <img src="https://via.placeholder.com/100" alt="Feature 3">
+                <h3>Expert Astrologers</h3>
+                <p>Consult with experienced astrologers.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy;  Cosmic Insights. All rights reserved.  <a href="/privacy-policy" style="color: #fff; text-decoration: underline;">Privacy Policy</a> | <a href="/terms-of-service" style="color: #fff; text-decoration: underline;">Terms of Service</a></p>
+    </footer>
+    <script>
+        // You can add JavaScript here for interactive features, if needed.
+        // For example, you could add client-side form validation or enhance the UI.
+        document.addEventListener('DOMContentLoaded', () => {
+             const natalChartForm = document.querySelector('#natal-chart form');
+            if(natalChartForm){
+                 natalChartForm.addEventListener('submit', (event) => {
+                    const birthDateInput = document.getElementById('birth_date');
+                    const birthTimeInput = document.getElementById('birth_time');
+                    const birthPlaceInput = document.getElementById('birth_place');
+
+                    if (!birthDateInput.value) {
+                        alert('Please enter your birth date.');
+                        event.preventDefault();
+                    }
+                    if (!birthTimeInput.value) {
+                        alert('Please enter your birth time.');
+                        event.preventDefault();
+                    }
+                     if (!birthPlaceInput.value) {
+                        alert('Please enter your birth place.');
+                        event.preventDefault();
+                    }
+                });
+            }
+
+
+            const loginForm = document.querySelector('#login form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', (event) => {
+                    const emailInput = document.getElementById('email');
+                    const passwordInput = document.getElementById('password');
+
+                    if (!emailInput.value) {
+                        alert('Please enter your email address.');
+                        event.preventDefault();
+                    }
+                    if (!passwordInput.value) {
+                        alert('Please enter your password.');
+                        event.preventDefault();
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>
